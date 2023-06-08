@@ -14,3 +14,13 @@ exports.follow = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.unfollow = async (req, res, next) => {
+    try {
+      await User.unfollow(req.user.id, parseInt(req.params.id, 10));
+      res.send('success');
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  };

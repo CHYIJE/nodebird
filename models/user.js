@@ -50,6 +50,16 @@ class User extends Sequelize.Model{
             through: 'Follow',
         });
     }
-};
+
+    static unfollow(userId, followingId) {
+        return this.findByPk(userId).then((user) => {
+          if (!user) {
+            throw new Error('User not found');
+          }
+          return user.removeFollowings(followingId);
+        });
+      }
+    }
+    
 
 module.exports = User;
