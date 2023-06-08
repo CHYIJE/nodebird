@@ -49,17 +49,10 @@ class User extends Sequelize.Model{
             as: 'Followings',
             through: 'Follow',
         });
+        db.User.prototype.removeFollower = async function(followerId) {
+            await this.removeFollowers(followerId);
+        };
     }
-
-    static unfollow(userId, followingId) {
-        return this.findByPk(userId).then((user) => {
-          if (!user) {
-            throw new Error('User not found');
-          }
-          return user.removeFollowings(followingId);
-        });
-      }
-    }
-    
+}
 
 module.exports = User;
