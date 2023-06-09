@@ -23,7 +23,9 @@
             </div>
           <input id="my-id" type="hidden" value="{{user.id}}">
           <a id="my-profile" href="/profile" class="btn">내 프로필</a>
+          <button id="profileUpdate" class="btn">프로필 수정</button>
           <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
+          
         {% else %}
           <form id="login-form" action="/auth/login" method="post">
             <div class="input-group">
@@ -56,6 +58,25 @@
         }
       };
     </script>
+<script>
+  document.getElementById('profileUpdate').addEventListener('click', function() {
+    const newNick = prompt('프로필을 수정하시겠습니까');
+    if (newNick) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          location.reload();
+        } else {
+          console.error(xhr.responseText);
+        }
+      };
+      const userId = document.getElementById('my-id').value;
+      xhr.open('PATCH', '/user/' + userId);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({ nick: newNick }));
+    }
+  });
+</script>
     {% block script %}
     {% endblock %}
   </body>
