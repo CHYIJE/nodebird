@@ -8,10 +8,8 @@
         <div class="following-list">
           {% for following in user.Followings %}
             <div class="following">
-              <div class="fingNick">{{ following.nick }}</div>
-              <div>
+              <div class="fingNick">{{ following.nick }}</div> 
                 <button class="twit-follow-cancle" data-user-id="{{ following.id }}">팔로우 끊기</button>
-              </div>
             </div>
           {% endfor %}
         </div>
@@ -30,32 +28,27 @@
       {% endif %}
     </div>
   </div>
-{% endblock %}
-
-{% block script %}
+  {% endblock %}
+  
+  {% block script %}
   <script>
-    document.querySelectorAll('.twit-follow-cancle').forEach(function(tag) {
-      tag.addEventListener('click', function() {
-        var isLoggedIn = document.querySelector('#my-id');
-        if (isLoggedIn) {
-        var userId = tag.parentNode.querySelector('.fingNick').innerHTML;
-        var myId = isLoggedIn.value;
-        if (userId !== myId) {
-          if (confirm('팔로우를 취소하시겠습니까?')) {
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-              if (xhr.status === 200) {
-                location.reload();
-              } else {
+    document.querySelectorAll('.twit-follow-cancle').forEach(function(button) {
+      button.addEventListener('click', function() {
+        var userId = button.getAttribute('data-user-id');
+        if (confirm('팔로우를 취소하시겠습니까?')) {
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              location.reload();
+            } else {
               console.error(xhr.responseText);
-              }
-            };
-            xhr.open('POST', '/user/' + userId + '/followCancle');
-            xhr.send();
-          }
+            }
+          };
+          xhr.open('POST', '/user/' + userId + '/followCancle');
+          xhr.send();
         }
-      }
-  });   
- });
+      });
+    });
   </script>
+  
 {% endblock %}
