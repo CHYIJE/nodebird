@@ -29,5 +29,15 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
+db.User.belongsToMany(db.Post, {
+  foreignKey: 'likerId',
+  as: 'LikedPosts',
+  through: 'Like',
+});
+db.Post.belongsToMany(db.User, {
+  foreignKey: 'likedPostId',
+  as: 'Likers',
+  through: 'Like',
+});
 
 module.exports = db;
