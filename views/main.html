@@ -38,13 +38,6 @@
               {% if twit.img %}
                 <div class="twit-img"><img src="{{twit.img}}" alt="섬네일"></div>
               {% endif %}
-              {% if user %}
-                {% if not like %}
-                  <button class="btn twit-like-yet">좋아요</button>
-                {% else %}
-                  <button class="btn twit-like">좋아요</button>
-                {% endif %}
-              {% endif %}
             </div>
           {% endfor %}
         {% endif %}
@@ -86,42 +79,6 @@
                 });
             }
           }
-        }
-      });
-    });
-    document.querySelectorAll('.twit-like-yet').forEach(function (tag) {
-      tag.addEventListener('click', function () {
-        var isLoggedIn = document.querySelector('#my-id');
-        if (isLoggedIn) {
-          var postId = tag.parentNode.querySelector('.twit-id').value;
-          var xhr = new XMLHttpRequest();
-          xhr.onload = function () {
-            if (xhr.status === 200) {
-              location.reload();
-            }else {
-              console.error(xhr.responseText);
-            }
-          };
-          xhr.open('POST', '/like/add/' + postId);
-          xhr.send();
-        }
-      });
-    });
-    document.querySelectorAll('.twit-like').forEach(function (tag) {
-      tag.addEventListener('click', function () {
-        var isLoggedIn = document.querySelector('#my-id');
-        if (isLoggedIn) {
-          var postId = tag.parentNode.querySelector('.twit-id').value;
-          var xhr = new XMLHttpRequest();
-          xhr.onload = function () {
-            if (xhr.status === 200) {
-              location.reload();
-            }else {
-              console.error(xhr.responseText);
-            }
-          };
-          xhr.open('POST', '/like/cancle/' + postId);
-          xhr.send();
         }
       });
     });
