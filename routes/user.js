@@ -12,6 +12,7 @@ router.post('/:id/follow', isLoggedIn, follow);
 // Unfollow a user
 router.post('/:id/followCancle', isLoggedIn, followCancle);
 
+
 router.patch('/:id', isLoggedIn, async (req, res, next) => {
     try {
       console.log(req.user.id, req.params.id);
