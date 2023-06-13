@@ -1,3 +1,4 @@
+Copy code
 {% extends 'layout.html' %}
 
 {% block content %}
@@ -38,15 +39,10 @@
               {% if twit.img %}
                 <div class="twit-img"><img src="{{twit.img}}" alt="섬네일"></div>
               {% endif %}
-              {% if user %}
-                {% if not like %}
-                  <button class="twit-like-yet">좋아요</button>
-                {% else %}
-                  <button class="twit-like">좋아요</button>
-                {% endif %}
-                {% if user.id === twit.User.id %}
-                  <button class="twit-delete">삭제</button>
-                {% endif %}
+              <button class="twit-like">좋아요</button>
+              <button class="twit-unlike" style="display: none;">좋아요</button>
+              {% if user.id === twit.User.id %}
+                <button class="twit-delete">삭제</button>
               {% endif %}
             </div>
           {% endfor %}
@@ -73,7 +69,46 @@
           });
       });
     }
-    document.querySelectorAll('.twit-delete').forEach(function (tag) {
+    document.querySelectorAll('.twit-like').forEach(function(button) {
+  button.addEventListener('click', function() {
+    const twitId = button.parentNode.querySelector('.twit-id').value;
+    axios.post(`/post/${twitId}/like`)
+      .then((response) => {
+        button.style.display = 'none'; // 좋아요 버튼 숨김
+        button.parentNode.querySelector('.twit-unlike').style.display = 'inline-block'; // 좋아요 취소 버튼 보임
+        const countElement = button.parentNode.querySelector('.like-count');
+        let count = parseInt(countElement.textContent.trim(), 10); // 현재 좋아요 개수 가져오기
+        if (!isNaN(count)) {
+          count++; // 좋아요 개수 증가
+          countElement.textContent = count; // 좋아요 숫자 업데이트
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+});
+
+document.querySelectorAll('.twit-unlike').forEach(function(button) {
+  button.addEventListener('click', function() {
+    const twitId = button.parentNode.querySelector('.twit-id').value;
+    axios.post(`/post/${twitId}/unlike`)
+      .then((response) => {
+        button.style.display = 'none'; // 좋아요 취소 버튼 숨김
+        button.parentNode.querySelector('.twit-like').style.display = 'inline-block'; // 좋아요 버튼 보임
+        const countElement = button.parentNode.querySelector('.like-count');
+        let count = parseInt(countElement.textContent.trim(), 10);// 현재 좋아요 개수 가져오기
+        if (!isNaN(count) && count > 0) {
+          count--; // 좋아요 개수 감소
+          countElement.textContent = count; // 좋아요 숫자 업데이트
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+});
+    document.querySelectorAll('.twit-delete').forEach(function(tag) {
       tag.addEventListener('click', function (){
         var isLoggedIn = document.querySelector('#my-id');
         if(isLoggedIn) {
@@ -91,6 +126,7 @@
         }
       });
     });
+
     document.querySelectorAll('.twit-follow').forEach(function(tag) {
       tag.addEventListener('click', function() {
         const myId = document.querySelector('#my-id');

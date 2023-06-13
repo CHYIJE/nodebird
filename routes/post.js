@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { afterUploadImage, uploadPost } = require('../controllers/post');
+const { afterUploadImage, uploadPost, likePost, unlikePost } = require('../controllers/post');
 const { isLoggedIn } = require('../middlewares');
 const { Post } = require('../models'); // Post 모델을 가져옵니다.
 
@@ -43,5 +43,8 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/:id/like', isLoggedIn, likePost);
+router.post('/:id/unlike', isLoggedIn, unlikePost);
 
 module.exports = router;
